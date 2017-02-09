@@ -1,0 +1,12 @@
+{
+  "loopback-mongo-todo": {
+    "host": "127.0.0.1",
+    "port": 27017,
+    "url": "mongodb://localhost/loopback-mongo-todo",
+    "database": "",
+    "password": "",
+    "name": "loopback-mongo-todo",
+    "user": "",
+    "connector": "mongodb"
+  }
+}
