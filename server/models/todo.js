@@ -17,4 +17,14 @@ module.exports = function(Todo) {
 
         next();
     });
+
+    Todo.validate('title', validator, {
+        message: 'Зрада не пройде! Нам порібна перемога!'
+    });
+
+    function validator(err) {
+        if (this.title.includes('зрада') || this.title.includes('zrada')) {
+            err();
+        }
+    }
 };

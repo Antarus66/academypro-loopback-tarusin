@@ -57,7 +57,7 @@
         });
     }
 
-    function renderTodo(todo = {}){
+    function renderTodo(todo){
         var $todoContainer = document.createElement('div');
         $todoContainer.className = 'todo-container';
 
@@ -107,16 +107,16 @@
                     sendEditTodoReq(todoContainer, id).then(function (response) {
                         return response.json();
                     }).then(function(data){
-                        if (data.errors) {
-                            showErrors(data.errors, todoContainer);
+                        if (data.error) {
+                            showErrors(data.error, todoContainer);
                         }
                     });
                 } else {
                     sendCreateTodoReq(todoContainer).then(function(response){
                         return response.json();
                     }).then(function(data){
-                        if (data.errors) {
-                            showErrors(data.errors, todoContainer);
+                        if (data.error) {
+                            showErrors(data.error, todoContainer);
                         } else if (isRendered(data.id)) {
                             todoContainer.remove();
                         } else if (data && data.id) {
@@ -141,11 +141,15 @@
             }
         });
 
-        function showErrors(errors, container) {
+        function showErrors(error, container) {
             var message = '';
 
-            for (var field in errors) {
-                message += errors[field].message + ' ';
+            var fields = error.details.messages;
+
+            for (var field in fields) {
+                var errors = fields[field];
+                var messages = errors.join(' ');
+                message += messages + ' ';
             }
 
             var $errorMessage = document.createElement('span');
