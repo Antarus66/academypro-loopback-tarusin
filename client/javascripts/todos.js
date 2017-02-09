@@ -1,8 +1,5 @@
 (function() {
-    //var socket = io();
-    var socket = {
-        on: function(){}
-    };
+    var socket = io();
 
     var $$addTodo = document.getElementById('add-todo');
     var $$todosContainer = document.getElementById('todos-container');
@@ -35,7 +32,7 @@
     }
 
     function updateRenderedTodo(todo) {
-        var todoContainer = document.getElementById(todo._id);
+        var todoContainer = document.getElementById(todo.id);
 
         if (!todoContainer) {
             return;
@@ -48,15 +45,15 @@
         done.checked = todo.done;
     }
 
-    function removeRenderedTodo(_id) {
-        var todoContainer = document.getElementById(_id);
+    function removeRenderedTodo(id) {
+        var todoContainer = document.getElementById(id);
 
         if (todoContainer) {
             todoContainer.remove();
         }
 
         todosList = todosList.filter(function(todoData) {
-            return todoData._id !== _id;
+            return todoData.id !== id;
         });
     }
 
@@ -64,11 +61,11 @@
         var $todoContainer = document.createElement('div');
         $todoContainer.className = 'todo-container';
 
-        if (todo._id){
-            $todoContainer.id = todo._id
+        if (todo.id){
+            $todoContainer.id = todo.id
 
             var $todoId = document.createElement('span');
-            $todoId.innerText = todo._id;
+            $todoId.innerText = todo.id;
             $todoContainer.appendChild($todoId);
         }
 
@@ -120,9 +117,9 @@
                     }).then(function(data){
                         if (data.errors) {
                             showErrors(data.errors, todoContainer);
-                        } else if (isRendered(data._id)) {
+                        } else if (isRendered(data.id)) {
                             todoContainer.remove();
-                        } else if (data && data._id) {
+                        } else if (data && data.id) {
                             appendTodo(data);
                             todoContainer.remove();
                         }
@@ -213,7 +210,7 @@
         socket.on('removed', handleRemoved);
 
         function handleAdded(todoData) {
-            if (!isRendered(todoData._id)) {
+            if (!isRendered(todoData.id)) {
                 appendTodo(todoData);
             }
         }
@@ -221,7 +218,7 @@
         function handleEdited(editedData) {
             // update in list
             todosList = todosList.filter(function(todoData) {
-                return todoData._id !== editedData._id;
+                return todoData.id !== editedData.id;
             });
 
             todosList.push(editedData);
@@ -231,15 +228,15 @@
         }
 
         function handleRemoved(todoData) {
-            if (isRendered(todoData._id)) {
-                removeRenderedTodo(todoData._id);
+            if (isRendered(todoData.id)) {
+                removeRenderedTodo(todoData.id);
             }
         }
     }
 
-    function isRendered(_id) {
+    function isRendered(id) {
         var found = todosList.find(function(todoData) {
-            return todoData._id === _id;
+            return todoData.id === id;
         });
 
         return Boolean(found);
