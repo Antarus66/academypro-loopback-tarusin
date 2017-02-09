@@ -2,8 +2,19 @@
 
 var loopback = require('loopback');
 var boot = require('loopback-boot');
+var path = require('path');
 
 var app = module.exports = loopback();
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'pug');
+
+app.use(loopback.static(path.join(__dirname + '/../client')));
+
+
+app.get('/', function(req, res, next) {
+    res.render('todos', {});
+});
 
 app.start = function() {
   // start the web server
